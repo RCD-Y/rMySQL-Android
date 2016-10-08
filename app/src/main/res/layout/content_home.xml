@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/content_home"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:paddingBottom="@dimen/activity_vertical_margin"
+	android:paddingLeft="@dimen/activity_horizontal_margin"
+	android:paddingRight="@dimen/activity_horizontal_margin"
+	android:paddingTop="@dimen/activity_vertical_margin"
+	app:layout_behavior="@string/appbar_scrolling_view_behavior"
+	android:orientation="vertical"
+	tools:context="richard.rmysql.MainActivity"
+	tools:showIn="@layout/app_bar_main">
+
+	<TextView
+		style="@style/StubTitle"
+		android:text="@string/home_title"/>
+
+	<Button
+		style="@style/HomeButton"
+		android:drawableStart="@drawable/ic_add"
+		android:onClick="createClick"
+		android:text="@string/home_button_create"/>
+	<Button
+		style="@style/HomeButton"
+		android:drawableStart="@drawable/ic_load"
+		android:onClick="loadClick"
+		android:text="@string/home_button_load"/>
+	<Button
+		style="@style/HomeButton"
+		android:drawableStart="@drawable/ic_settings"
+		android:onClick="settingsClick"
+		android:text="@string/home_button_settings"/>
+	<Button
+		style="@style/HomeButton"
+		android:drawableStart="@drawable/ic_website"
+		android:onClick="gitHubClick"
+		android:text="@string/home_button_github"/>
+
+
+</LinearLayout>

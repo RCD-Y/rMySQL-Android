@@ -1,8 +1,12 @@
 package richard.rmysql;
 
+import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.Layout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,9 +16,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
+
+	private ArrayList<View> subViews=new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +36,14 @@ public class MainActivity extends AppCompatActivity
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+		/*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 						.setAction("Action", null).show();
 			}
-		});
+		});*/
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,7 +80,7 @@ public class MainActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_close_connection) {
 			return true;
 		}
 
@@ -80,22 +93,55 @@ public class MainActivity extends AppCompatActivity
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 
-		if (id == R.id.nav_camera) {
-			// Handle the camera action
-		} else if (id == R.id.nav_gallery) {
+		if (id == R.id.nav_home) {
+			changeDisplayView(R.layout.content_home);
+		} else if (id == R.id.nav_connection) {
 
-		} else if (id == R.id.nav_slideshow) {
+		} else if (id == R.id.nav_settings) {
 
-		} else if (id == R.id.nav_manage) {
-
-		} else if (id == R.id.nav_share) {
-
-		} else if (id == R.id.nav_send) {
+		} else if (id == R.id.nav_about) {
 
 		}
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	public View changeDisplayView(int layoutResource) {
+		LinearLayout viewParent=(LinearLayout) findViewById(R.id.view_parent);
+		viewParent.removeAllViewsInLayout();
+		ViewStub viewStub=new ViewStub(this);
+		viewStub.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		viewStub.setTag(0);
+		viewStub.setLayoutResource(layoutResource);
+		viewParent.addView(viewStub);
+		View view=viewStub.inflate();
+		Animation animation = AnimationUtils.makeInAnimation(this, true);
+		animation.setDuration(300);
+		view.startAnimation(animation);
+		return view;
+	}
+
+	public void changeDisplayView(View view) {
+		LinearLayout viewParent=(LinearLayout) findViewById(R.id.view_parent);
+		viewParent.removeAllViewsInLayout();
+		viewParent.addView(view);
+	}
+
+	public void createClick(View v) {
+		subViews.add(changeDisplayView(R.layout.content_connection_page));
+	}
+
+	public void loadClick(View v) {
+		changeDisplayView(subViews.get(0));
+	}
+
+	public void settingsClick(View v) {
+
+	}
+
+	public void gitHubClick(View v) {
+
 	}
 }
