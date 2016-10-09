@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="home_button_create">创建连接</string>
+	<string name="home_button_load">读取预设</string>
+	<string name="home_button_settings">设置</string>
+	<string name="home_title">主页</string>
+	<string name="menu_close_connection">关闭连接</string>
+	<string name="menu_information">连接信息</string>
+	<string name="menu_reconnect">重新连接</string>
+	<string name="menu_save_as_preset">保存为预设</string>
+	<string name="menu_save_result">保存结果</string>
+	<string name="menu_view_result">读取结果</string>
+	<string name="nav_about">关于</string>
+	<string name="nav_connection_untitled">未命名</string>
+	<string name="nav_home">主页</string>
+	<string name="nav_settings">设置</string>
+	<string name="navigation_drawer_close">关闭导航栏</string>
+	<string name="navigation_drawer_open">打开导航栏</string>
+	<string name="dialog_create_address">服务器地址:端口</string>
+	<string name="dialog_create_cancel">取消</string>
+	<string name="dialog_create_connect">连接</string>
+	<string name="dialog_create_password">密码</string>
+	<string name="dialog_create_schema">数据库</string>
+	<string name="dialog_create_ssh_address">SSH服务器地址:端口</string>
+	<string name="dialog_create_ssh_password">密码</string>
+	<string name="dialog_create_ssh_username">用户名</string>
+	<string name="dialog_create_title">创建连接</string>
+	<string name="dialog_create_use_ssh">使用SSH隧道</string>
+	<string name="dialog_create_username">用户名</string>
+</resources>

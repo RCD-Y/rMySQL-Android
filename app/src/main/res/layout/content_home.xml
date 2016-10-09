@@ -17,8 +17,8 @@
 
 	<TextView
 		style="@style/StubTitle"
+		android:layout_marginBottom="32dp"
 		android:text="@string/home_title"/>
-
 	<Button
 		style="@style/HomeButton"
 		android:drawableStart="@drawable/ic_add"
