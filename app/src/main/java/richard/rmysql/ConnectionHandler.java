@@ -32,10 +32,13 @@ public class ConnectionHandler {
 	private AlertDialog pendingDialog;
 	private AlertDialog loadingScreen;
 	private TextView[][] dataTexts;
+	private EditText suggestedEditText;
 	private float currentTotalWidth=0;
+	private String previousSelect="";
 
-	ConnectionHandler(View connPage) {
+	ConnectionHandler(View connPage, rMySQL r) {
 		this.connPage=connPage;
+		this.r=r;
 		connPage.findViewById(R.id.connection_select).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -64,10 +67,6 @@ public class ConnectionHandler {
 
 	public void setContext(Context context) {
 		this.context=context;
-	}
-
-	public void setConnection(rMySQL r) {
-		this.r=r;
 	}
 
 	public int getPixels(int dp) {
@@ -120,7 +119,7 @@ public class ConnectionHandler {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						choiceDialog.dismiss();
-						((EditText) pendingDialog.findViewById(R.id.dialog_select_flag_field)).setText(arrayAdapter.getItem(position));
+						suggestedEditText.setText(arrayAdapter.getItem(position));
 					}
 				});
 			}
@@ -135,9 +134,10 @@ public class ConnectionHandler {
 	}
 
 	public void suggestTables() {
+		System.out.println(r.toString());
 		final AsyncTask<Void,Void,ArrayList<String>> asyncTask=new AsyncTask<Void,Void,ArrayList<String>>() {
 			ArrayList<String> suggestedArray=new ArrayList<>();
-			public ArrayList<String> doInBackground(Void... Params) {
+			public ArrayList<String> doInBackground(Void... params) {
 				try {
 					String[] result = r.RStoArray(r.QueryCustom("SHOW TABLES"))[0];
 					for (String s:result) {
@@ -163,7 +163,7 @@ public class ConnectionHandler {
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						choiceDialog.dismiss();
-						((EditText) pendingDialog.findViewById(R.id.dialog_select_table_name)).setText(arrayAdapter.getItem(position));
+						suggestedEditText.setText(arrayAdapter.getItem(position));
 					}
 				});
 			}
@@ -290,10 +290,13 @@ public class ConnectionHandler {
 					public String doInBackground(String... params) {
 						try {
 							ResultSet rs;
+							String tempSelect;
 							if (params[0].equals("true")) {
 								rs=r.SearchCustom(params[1], params[2]);
+								tempSelect=params[1]+";#;"+params[2];
 							} else {
 								rs=r.SearchForRecord(params[1], params[3], params[4]);
+								tempSelect=params[1]+";;"+params[3]+";;"+params[4];
 							}
 							if (rs==null) {
 								return "Nothing";
@@ -303,6 +306,7 @@ public class ConnectionHandler {
 								metaData[i]=rs.getMetaData().getColumnName(i+1);
 							}
 							putResults(metaData, r.RStoArray(rs));
+							previousSelect=tempSelect;
 							return "Success";
 						} catch (SQLException e) {
 							return e.getLocalizedMessage();
@@ -341,41 +345,35 @@ public class ConnectionHandler {
 		pendingDialog.findViewById(R.id.dialog_select_choice_table).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				suggestedEditText=(EditText) pendingDialog.findViewById(R.id.dialog_select_table_name);
 				suggestTables();
 			}
 		});
 		pendingDialog.findViewById(R.id.dialog_select_choice_field).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				suggestedEditText=(EditText) pendingDialog.findViewById(R.id.dialog_select_flag_field);
 				suggestFields(((EditText) pendingDialog.findViewById(R.id.dialog_select_table_name)).getText().toString());
 			}
 		});
 	}
 
+	@SuppressWarnings("all")
 	public void updateClicked(String tableName, String fieldName, String valueName) {
 		AlertDialog.Builder builder=new AlertDialog.Builder(context);
-		builder.setTitle(R.string.dialog_select_title);
-		builder.setView(R.layout.dialog_select);
-		builder.setPositiveButton(R.string.dialog_select_execute, new DialogInterface.OnClickListener() {
+		builder.setTitle(R.string.dialog_update_title);
+		builder.setView(R.layout.dialog_update);
+		builder.setPositiveButton(R.string.dialog_update_execute, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				final AsyncTask asyncTask=new AsyncTask<String, Void, String>() {
 					public String doInBackground(String... params) {
 						try {
-							ResultSet rs;
 							if (params[0].equals("true")) {
-								rs=r.SearchCustom(params[1], params[2]);
+								r.UpdateValueCustom(params[1],params[7],params[6]);
 							} else {
-								rs=r.SearchForRecord(params[1], params[3], params[4]);
+								r.UpdateValue(params[1],params[2],params[3],params[4],params[5]);
 							}
-							if (rs==null) {
-								return "Nothing";
-							}
-							String[] metaData=new String[rs.getMetaData().getColumnCount()];
-							for (int i=0; i<metaData.length; i++) {
-								metaData[i]=rs.getMetaData().getColumnName(i+1);
-							}
-							putResults(metaData, r.RStoArray(rs));
 							return "Success";
 						} catch (SQLException e) {
 							return e.getLocalizedMessage();
@@ -384,23 +382,36 @@ public class ConnectionHandler {
 
 					public void onPostExecute(String result) {
 						dismissLoading();
-						if (result.equals("Nothing")) {
-							AlertDialog.Builder subBuilder=new AlertDialog.Builder(context);
-							subBuilder.setTitle(R.string.connection_operation_failed);
-							subBuilder.setMessage(context.getString(R.string.connection_operation_nothing));
-							subBuilder.show();
-						} else if (!result.equals("Success")) {
+						if (!result.equals("Success")) {
 							AlertDialog.Builder subBuilder=new AlertDialog.Builder(context);
 							subBuilder.setTitle(R.string.connection_operation_failed);
 							subBuilder.setMessage(context.getString(R.string.connection_operation_fail_message)+": "+result);
 							subBuilder.show();
+						} else {
+							AlertDialog.Builder subBuilder=new AlertDialog.Builder(context);
+							subBuilder.setTitle(R.string.connection_operation_successful);
+							subBuilder.setMessage(R.string.connection_operation_success_message);
+							subBuilder.setPositiveButton(R.string.connection_operation_success_option_yes, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									if (previousSelect.contains(";")) redoSelect();
+								}
+							});
+							subBuilder.setNegativeButton(R.string.connection_operation_success_option_no, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {}
+							});
+							subBuilder.show();
 						}
 					}
-				}.execute(String.valueOf(((CheckBox) pendingDialog.findViewById(R.id.dialog_select_use_custom)).isChecked()),
-						((EditText) pendingDialog.findViewById(R.id.dialog_select_table_name)).getText().toString(),
-						((EditText) pendingDialog.findViewById(R.id.dialog_select_custom_condition)).getText().toString(),
-						((EditText) pendingDialog.findViewById(R.id.dialog_select_flag_field)).getText().toString(),
-						((EditText) pendingDialog.findViewById(R.id.dialog_select_flag_value)).getText().toString());
+				}.execute(String.valueOf(((CheckBox) pendingDialog.findViewById(R.id.dialog_update_use_custom)).isChecked()),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_table_name)).getText().toString(),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_flag_field)).getText().toString(),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_flag_value)).getText().toString(),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_dest_field)).getText().toString(),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_dest_value)).getText().toString(),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_custom_condition)).getText().toString(),
+						((EditText) pendingDialog.findViewById(R.id.dialog_update_custom_statement)).getText().toString());
 				showLoading(new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -411,18 +422,75 @@ public class ConnectionHandler {
 			}
 		});
 		pendingDialog=builder.show();
-		pendingDialog.findViewById(R.id.dialog_select_choice_table).setOnClickListener(new View.OnClickListener() {
+		pendingDialog.findViewById(R.id.dialog_update_choice_table).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				suggestedEditText=(EditText) pendingDialog.findViewById(R.id.dialog_update_table_name);
 				suggestTables();
 			}
 		});
-		pendingDialog.findViewById(R.id.dialog_select_choice_field).setOnClickListener(new View.OnClickListener() {
+		pendingDialog.findViewById(R.id.dialog_update_choice_field).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				suggestFields(((EditText) pendingDialog.findViewById(R.id.dialog_select_table_name)).getText().toString());
+				suggestedEditText=(EditText) pendingDialog.findViewById(R.id.dialog_update_flag_field);
+				suggestFields(((EditText) pendingDialog.findViewById(R.id.dialog_update_table_name)).getText().toString());
+			}
+		});
+		pendingDialog.findViewById(R.id.dialog_update_choice_dest_field).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				suggestedEditText=(EditText) pendingDialog.findViewById(R.id.dialog_update_dest_field);
+				suggestFields(((EditText) pendingDialog.findViewById(R.id.dialog_update_table_name)).getText().toString());
 			}
 		});
 	}
 	//endregion
+
+	public void redoSelect() {
+		final AsyncTask asyncTask=new AsyncTask<Void, Void, String>() {
+			public String doInBackground(Void... params) {
+				try {
+					ResultSet rs;
+					if (previousSelect.contains(";#;")) {
+						rs=r.SearchCustom(previousSelect.split(";#;")[0],previousSelect.split(";#;")[1]);
+					} else {
+						rs=r.SearchForRecord(previousSelect.split(";;")[0],previousSelect.split(";;")[1],previousSelect.split(";;")[2]);
+					}
+					if (rs==null) {
+						return "Nothing";
+					}
+					String[] metaData=new String[rs.getMetaData().getColumnCount()];
+					for (int i=0; i<metaData.length; i++) {
+						metaData[i]=rs.getMetaData().getColumnName(i+1);
+					}
+					putResults(metaData, r.RStoArray(rs));
+					return "Success";
+				} catch (SQLException e) {
+					return e.getLocalizedMessage();
+				}
+			}
+
+			public void onPostExecute(String result) {
+				dismissLoading();
+				if (result.equals("Nothing")) {
+					AlertDialog.Builder subBuilder=new AlertDialog.Builder(context);
+					subBuilder.setTitle(R.string.connection_operation_failed);
+					subBuilder.setMessage(context.getString(R.string.connection_operation_nothing));
+					subBuilder.show();
+				} else if (!result.equals("Success")) {
+					AlertDialog.Builder subBuilder=new AlertDialog.Builder(context);
+					subBuilder.setTitle(R.string.connection_operation_failed);
+					subBuilder.setMessage(context.getString(R.string.connection_operation_fail_message)+": "+result);
+					subBuilder.show();
+				}
+			}
+		}.execute();
+		showLoading(new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				loadingScreen.dismiss();
+				asyncTask.cancel(true);
+			}
+		});
+	}
 }

@@ -102,16 +102,12 @@
 			android:paddingLeft="4dp"
 			android:paddingRight="4dp"
 			android:layout_weight="1.0">
-			<ScrollView
+			<TableLayout
 				android:layout_width="wrap_content"
-				android:layout_height="match_parent">
-				<TableLayout
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:stretchColumns="*"
-					android:id="@+id/connection_result_list">
-				</TableLayout>
-			</ScrollView>
+				android:layout_height="wrap_content"
+				android:stretchColumns="*"
+				android:id="@+id/connection_result_list">
+			</TableLayout>
 		</HorizontalScrollView>
 	</LinearLayout>
 </ScrollView>

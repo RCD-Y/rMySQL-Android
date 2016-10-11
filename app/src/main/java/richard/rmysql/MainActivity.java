@@ -24,7 +24,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
 
 import com.jcraft.jsch.JSchException;
 
@@ -41,7 +40,21 @@ public class MainActivity extends AppCompatActivity
 	private NavigationView navigationView;
 	private AlertDialog dialogView=null;
 	private AlertDialog connectingDialogView=null;
-	private rMySQL tempConnection=null;
+
+	class ConnectionResult {
+		String result;
+		rMySQL connection;
+		ConnectionResult(String result, rMySQL connection) {
+			this.result=result;
+			this.connection=connection;
+		}
+		rMySQL getConnection() {
+			return connection;
+		}
+		String getResult() {
+			return result;
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,10 +154,53 @@ public class MainActivity extends AppCompatActivity
 		builder.setPositiveButton(R.string.dialog_create_connect, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				final ConnTask connTask=new ConnTask();
-				connTask.execute(String.valueOf(((CheckBox) dialogView.findViewById(R.id.dialog_create_use_ssh)).isChecked()),
+				final AsyncTask<String, Void, ConnectionResult> asyncTask=new AsyncTask<String, Void, ConnectionResult>() {
+					@Override
+					protected ConnectionResult doInBackground(String... strings) {
+						rMySQL r=new rMySQL();
+						if (strings[0].equals("true")) {
+							try {
+								r.dellocalbound(Integer.parseInt(strings[4]));
+							} catch (Exception e) {}
+							try {
+								if (!strings[1].contains(":")) strings[1]=strings[1]+":22";
+								if (!strings[8].contains(":")) strings[8]=strings[8]+":3306";
+								r.ssh(strings[1].split(":")[0],strings[2],strings[3],Integer.parseInt(strings[1].split(":")[1]));
+								r.createbound(Integer.parseInt(strings[4]),strings[8].split(":")[0],Integer.parseInt(strings[8].split(":")[1]));
+								r.ConstructConnection("127.0.0.1:"+strings[4],strings[5],strings[6],strings[7]);
+								//System.out.println(r.RStoTable(r.FindAll("Stat"),10));
+							} catch (JSchException | IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+								e.printStackTrace();
+								return new ConnectionResult(e.getLocalizedMessage(),null);
+							}
+						} else {
+							try {
+								r.ConstructConnection(strings[8],strings[5],strings[6],strings[7]);
+							} catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
+								e.printStackTrace();
+								return new ConnectionResult(e.getLocalizedMessage(),null);
+							}
+						}
+						return new ConnectionResult("Success",r);
+					}
+
+					@Override
+					protected void onPostExecute(ConnectionResult result) {
+						if (result.getResult().equals("Success")) {
+							connectingDialogView.dismiss();
+							subViews.add(changeDisplayView(R.layout.content_connection_page));
+							navigationView.getMenu().add(R.id.nav_group,0,subViews.size(),getString(R.string.nav_connection_untitled)+subViews.size()).setIcon(R.drawable.ic_nav_connection).setCheckable(true).setChecked(true);
+							ConnectionHandler newHandler=new ConnectionHandler(subViews.get(subViews.size()-1),result.getConnection());
+							connHandlers.add(newHandler);
+							newHandler.setContext(findViewById(R.id.app_bar).getContext());
+						} else {
+							connectingDialogView.dismiss();
+							Snackbar.make(findViewById(R.id.app_bar),getString(R.string.dialog_connecting_failed)+": "+result.getResult(),5000).show();
+						}
+					}
+				}.execute(String.valueOf(((CheckBox) dialogView.findViewById(R.id.dialog_create_use_ssh)).isChecked()),
 						editTextToString(R.id.dialog_create_ssh_address),editTextToString(R.id.dialog_create_ssh_username),
-						editTextToString(R.id.dialog_create_ssh_password),"3308",editTextToString(R.id.dialog_create_schema),
+						editTextToString(R.id.dialog_create_ssh_password),String.valueOf(4321+connHandlers.size()),editTextToString(R.id.dialog_create_schema),
 						editTextToString(R.id.dialog_create_username),editTextToString(R.id.dialog_create_password),
 						editTextToString(R.id.dialog_create_address));
 				//ServerAddress, Username, Password, LocalPort, Schema, SQLUsername, SQLPassword, SQLServerAddress
@@ -157,7 +213,7 @@ public class MainActivity extends AppCompatActivity
 				builder.setNegativeButton(R.string.dialog_stop, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						connTask.cancel(true);
+						asyncTask.cancel(true);
 						connectingDialogView.dismiss();
 						Snackbar.make(findViewById(R.id.app_bar), R.string.dialog_connecting_aborted, 1000).show();
 					}
@@ -179,53 +235,11 @@ public class MainActivity extends AppCompatActivity
 
 	public void gitHubClick(View v) {
 		Snackbar.make(findViewById(R.id.app_bar),"GitHub unavailable",1000).show();
-	}
-
-	public class ConnTask extends AsyncTask<String, Void, String> {
-		@Override
-		protected String doInBackground(String... strings) {
-			tempConnection=new rMySQL();
-			if (strings[0].equals("true")) {
-				try {
-					tempConnection.dellocalbound(Integer.parseInt(strings[4]));
-				} catch (Exception e) {}
-				try {
-					if (!strings[1].contains(":")) strings[1]=strings[1]+":22";
-					if (!strings[8].contains(":")) strings[8]=strings[8]+":3306";
-					tempConnection.ssh(strings[1].split(":")[0],strings[2],strings[3],Integer.parseInt(strings[1].split(":")[1]));
-					tempConnection.createbound(Integer.parseInt(strings[4]),strings[8].split(":")[0],Integer.parseInt(strings[8].split(":")[1]));
-					tempConnection.ConstructConnection("127.0.0.1:"+strings[4],strings[5],strings[6],strings[7]);
-					//System.out.println(r.RStoTable(r.FindAll("Stat"),10));
-				} catch (JSchException | IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-					e.printStackTrace();
-					return e.getLocalizedMessage();
-				}
-			} else {
-				try {
- 					tempConnection.ConstructConnection(strings[8],strings[5],strings[6],strings[7]);
-				} catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
-					e.printStackTrace();
-					return e.getLocalizedMessage();
-				}
+		/*new AsyncTask<Void,Void,Void>() {
+			public Void doInBackground(Void... params) {
+				return null;
 			}
-			return "Success";
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			if (result.equals("Success")) {
-				connectingDialogView.dismiss();
-				subViews.add(changeDisplayView(R.layout.content_connection_page));
-				navigationView.getMenu().add(R.id.nav_group,0,subViews.size(),getString(R.string.nav_connection_untitled)+subViews.size()).setIcon(R.drawable.ic_nav_connection).setCheckable(true).setChecked(true);
-				ConnectionHandler newHandler=new ConnectionHandler(subViews.get(subViews.size()-1));
-				connHandlers.add(newHandler);
-				newHandler.setContext(findViewById(R.id.app_bar).getContext());
-				newHandler.setConnection(tempConnection);
-			} else {
-				connectingDialogView.dismiss();
-				Snackbar.make(findViewById(R.id.app_bar),getString(R.string.dialog_connecting_failed)+": "+result,5000).show();
-			}
-		}
+		}.execute();*/
 	}
 
 	public int getPixels(int dp) {
