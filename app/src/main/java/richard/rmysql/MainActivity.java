@@ -3,6 +3,7 @@ package richard.rmysql;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
@@ -20,8 +21,10 @@ import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
 
 import com.jcraft.jsch.JSchException;
 
@@ -127,6 +130,10 @@ public class MainActivity extends AppCompatActivity
 		view.startAnimation(animation);
 	}
 
+	public String editTextToString(@IdRes int editText) {
+		return ((EditText) dialogView.findViewById(editText)).getText().toString();
+	}
+
 	public void createClick(View v) {
 		AlertDialog.Builder builder=new AlertDialog.Builder(this);
 		builder.setTitle(R.string.dialog_create_title);
@@ -134,18 +141,23 @@ public class MainActivity extends AppCompatActivity
 		builder.setPositiveButton(R.string.dialog_create_connect, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				ConnTask connTask=new ConnTask();
-				//execution hidden here
-				//ServerAddress, Username, Password, LocalPort, RemoteAddress, RemotePort, Schema, SQLUsername, SQLPassword, SQLServerAddress
+				final ConnTask connTask=new ConnTask();
+				connTask.execute(String.valueOf(((CheckBox) dialogView.findViewById(R.id.dialog_create_use_ssh)).isChecked()),
+						editTextToString(R.id.dialog_create_ssh_address),editTextToString(R.id.dialog_create_ssh_username),
+						editTextToString(R.id.dialog_create_ssh_password),"3308",editTextToString(R.id.dialog_create_schema),
+						editTextToString(R.id.dialog_create_username),editTextToString(R.id.dialog_create_password),
+						editTextToString(R.id.dialog_create_address));
+				//ServerAddress, Username, Password, LocalPort, Schema, SQLUsername, SQLPassword, SQLServerAddress
 				AlertDialog.Builder builder=new AlertDialog.Builder(findViewById(R.id.app_bar).getContext());
 				builder.setCancelable(false);
 				builder.setTitle("Connecting...");
 				ProgressBar loadingAnimation=new ProgressBar(findViewById(R.id.app_bar).getContext());
-				loadingAnimation.setPadding(0,getPixels(16),0,0);
+				loadingAnimation.setPadding(0,getPixels(20),0,0);
 				builder.setView(loadingAnimation);
-				builder.setNegativeButton("Stop", new DialogInterface.OnClickListener() {
+				builder.setNegativeButton(R.string.dialog_stop, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						connTask.cancel(true);
 						connectingDialogView.dismiss();
 						Snackbar.make(findViewById(R.id.app_bar), R.string.dialog_connecting_aborted, 1000).show();
 					}
@@ -153,10 +165,6 @@ public class MainActivity extends AppCompatActivity
 				connectingDialogView=builder.show();
 				//connHandlers.get(connHandlers.size()-1).setDesc(String.valueOf(subViews.size()-1));
 			}
-		});
-		builder.setNegativeButton(R.string.dialog_create_cancel, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
 		});
 		dialogView=builder.show();
 	}
@@ -176,24 +184,25 @@ public class MainActivity extends AppCompatActivity
 	public class ConnTask extends AsyncTask<String, Void, String> {
 		@Override
 		protected String doInBackground(String... strings) {
-			rMySQL r=new rMySQL();
+			tempConnection=new rMySQL();
 			if (strings[0].equals("true")) {
 				try {
-					r.dellocalbound(Integer.parseInt(strings[4]));
+					tempConnection.dellocalbound(Integer.parseInt(strings[4]));
 				} catch (Exception e) {}
 				try {
-					r.ssh(strings[1].split(":")[0],strings[2],strings[3],Integer.parseInt(strings[1].split(":")[1]));
-					r.createbound(Integer.parseInt(strings[4]),strings[5],Integer.parseInt(strings[6]));
-					r.ConstructConnection("127.0.0.1:"+strings[4],strings[7],strings[8],strings[9]);
-					tempConnection=r;
+					if (!strings[1].contains(":")) strings[1]=strings[1]+":22";
+					if (!strings[8].contains(":")) strings[8]=strings[8]+":3306";
+					tempConnection.ssh(strings[1].split(":")[0],strings[2],strings[3],Integer.parseInt(strings[1].split(":")[1]));
+					tempConnection.createbound(Integer.parseInt(strings[4]),strings[8].split(":")[0],Integer.parseInt(strings[8].split(":")[1]));
+					tempConnection.ConstructConnection("127.0.0.1:"+strings[4],strings[5],strings[6],strings[7]);
+					//System.out.println(r.RStoTable(r.FindAll("Stat"),10));
 				} catch (JSchException | IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
 					e.printStackTrace();
 					return e.getLocalizedMessage();
 				}
 			} else {
 				try {
- 					r.ConstructConnection(strings[10],strings[7],strings[8],strings[9]);
-					tempConnection=r;
+ 					tempConnection.ConstructConnection(strings[8],strings[5],strings[6],strings[7]);
 				} catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
 					e.printStackTrace();
 					return e.getLocalizedMessage();

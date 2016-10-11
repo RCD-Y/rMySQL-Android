@@ -44,7 +44,45 @@
 	<string name="connection_remove">Remove</string>
 	<string name="connection_drop">Drop</string>
 	<string name="connection_alter">Alter</string>
-	<string name="connection_execute">Execute</string>
-	<string name="connection_modify">Modify</string>
+	<string name="connection_create">Create</string>
+	<string name="connection_custom">Custom</string>
+	<string name="connection_result">Result</string>
+	<string name="connection_expand">Expand</string>
+	<string name="connection_shrink">Shrink</string>
 
+	<string name="connection_detail_data">Details</string>
+	<string name="connection_result_options">Result Options</string>
+	<string name="connection_operation_failed">Operation Failed</string>
+	<string name="connection_operation_fail_message">Error Message</string>
+	<string name="connection_operation_nothing">Nothing found</string>
+
+	<string name="dialog_select_title">Select</string>
+	<string name="dialog_select_sel_from">Select From</string>
+	<string name="dialog_select_table_name">Table Name</string>
+	<string name="dialog_select_where">Where</string>
+	<string name="dialog_select_flag_field">Flag Field</string>
+	<string name="dialog_select_equals">=</string>
+	<string name="dialog_select_flag_value">Flag Value</string>
+	<string name="dialog_select_custom_condition">Custom Condition</string>
+	<string name="dialog_select_custom_example">Condition (e.g. Name=`Bob` AND Gender=`Male`)</string>
+	<string name="dialog_select_execute">Select</string>
+
+	<string name="dialog_update_title">Update</string>
+	<string name="dialog_update_update_to">Update To</string>
+	<string name="dialog_update_table_name">Table Name</string>
+	<string name="dialog_update_where">Where</string>
+	<string name="dialog_update_flag_field">Flag Field</string>
+	<string name="dialog_update_equals">=</string>
+	<string name="dialog_update_flag_value">Flag Value</string>
+	<string name="dialog_update_set">Set</string>
+	<string name="dialog_update_dest_field">Destination Field</string>
+	<string name="dialog_update_dest_value">Destination Value</string>
+	<string name="dialog_update_custom">Custom</string>
+	<string name="dialog_update_custom_condition_example">Condition (e.g. Name=`Bob` AND Gender=`Male`)</string>
+	<string name="dialog_update_custom_statement_example">Statement (e.g. Age=26)</string>
+	<string name="dialog_update_execute">Update</string>
+
+	<string name="dialog_please_wait">Please Wait&#8230;</string>
+	<string name="dialog_suggest_failed">Nothing to suggest</string>
+	<string name="dialog_stop">Stop</string>
 </resources>
