@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/dialog_delete"
 	style="@style/OperationDialog"
-	android:id="@+id/dialog_select"
 	tools:ignore="NestedWeights"
 	tools:context="richard.rmysql.MainActivity">
 	<TextView
 		style="@style/DialogText"
-		android:text="@string/dialog_select_sel_from"/>
+		android:text="@string/dialog_delete_del_from"/>
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_width="match_parent"
@@ -16,15 +16,15 @@
 			android:layout_weight="1.0"
 			style="@style/DialogText"
 			android:layout_width="0dp"
-			android:id="@+id/dialog_select_table_name"
-			android:hint="@string/dialog_select_table_name"/>
+			android:id="@+id/dialog_delete_table_name"
+			android:hint="@string/dialog_delete_table_name"/>
 		<Button
 			style="@style/ChoiceButton"
-			android:id="@+id/dialog_select_choice_table"/>
+			android:id="@+id/dialog_delete_choice_table"/>
 	</LinearLayout>
 	<TextView
 		style="@style/DialogText"
-		android:text="@string/dialog_select_where"/>
+		android:text="@string/dialog_delete_where"/>
 	<LinearLayout
 		android:orientation="horizontal"
 		android:layout_width="match_parent"
@@ -36,13 +36,13 @@
 			android:layout_height="wrap_content">
 			<EditText
 				style="@style/DialogText"
-				android:layout_width="0dp"
 				android:layout_weight="1.0"
-				android:id="@+id/dialog_select_flag_field"
-				android:hint="@string/dialog_select_flag_field"/>
+				android:layout_width="0dp"
+				android:id="@+id/dialog_delete_flag_field"
+				android:hint="@string/dialog_delete_flag_field"/>
 			<Button
 				style="@style/ChoiceButton"
-				android:id="@+id/dialog_select_choice_field"/>
+				android:id="@+id/dialog_delete_choice_field"/>
 		</LinearLayout>
 		<TextView
 			android:layout_width="0dp"
@@ -50,7 +50,7 @@
 			android:layout_weight="0.1"
 			android:textAlignment="center"
 			android:layout_marginTop="12dp"
-			android:text="@string/dialog_select_equals"/>
+			android:text="@string/dialog_delete_equals"/>
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_weight="0.45"
@@ -60,17 +60,17 @@
 				style="@style/DialogText"
 				android:layout_width="0dp"
 				android:layout_weight="1.0"
-				android:id="@+id/dialog_select_flag_value"
-				android:hint="@string/dialog_select_flag_value"/>
+				android:id="@+id/dialog_delete_flag_value"
+				android:hint="@string/dialog_delete_flag_value"/>
 		</LinearLayout>
 	</LinearLayout>
 	<CheckBox
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/dialog_select_use_custom"
-		android:text="@string/dialog_select_custom_condition"/>
+		android:id="@+id/dialog_delete_use_custom"
+		android:text="@string/dialog_delete_custom_condition"/>
 	<EditText
 		style="@style/DialogText"
-		android:id="@+id/dialog_select_custom_condition"
-		android:hint="@string/dialog_select_custom_example"/>
+		android:id="@+id/dialog_delete_custom_condition"
+		android:hint="@string/dialog_delete_custom_example"/>
 </LinearLayout>

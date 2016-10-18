@@ -51,4 +51,19 @@
 		<item name="android:text">...</item>
 	</style>
 
+	<style name="AddChoiceButton">
+		<item name="android:layout_width">36dp</item>
+		<item name="android:layout_height">40dp</item>
+		<item name="android:text">+</item>
+	</style>
+
+	<style name="OperationDialog">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+		<item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+		<item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+		<item name="android:orientation">vertical</item>
+	</style>
+
 </resources>

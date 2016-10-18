@@ -1,6 +1,9 @@
 package richard.rmysql;
 
+import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity
 	private NavigationView navigationView;
 	private AlertDialog dialogView=null;
 	private AlertDialog connectingDialogView=null;
+	private RetainedFragment dataFragment;
 
 	class ConnectionResult {
 		String result;
@@ -57,6 +61,13 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+		dataFragment.setConnHandlers(connHandlers);
+		dataFragment.setSubViews(subViews);
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -71,6 +82,16 @@ public class MainActivity extends AppCompatActivity
 
 		navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
+
+		FragmentManager fm = getFragmentManager();
+		dataFragment = (RetainedFragment) fm.findFragmentByTag("data");
+
+		if (dataFragment == null) {
+			dataFragment = new RetainedFragment();
+			fm.beginTransaction().add(dataFragment, "data").commit();
+			dataFragment.setConnHandlers(connHandlers);
+			dataFragment.setSubViews(subViews);
+		}
 	}
 
 	@Override
@@ -95,6 +116,7 @@ public class MainActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		if (id == R.id.action_close_connection) {
+
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -171,6 +193,9 @@ public class MainActivity extends AppCompatActivity
 								//System.out.println(r.RStoTable(r.FindAll("Stat"),10));
 							} catch (JSchException | IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
 								e.printStackTrace();
+								try {
+									r.dellocalbound(Integer.parseInt(strings[4]));
+								} catch (Exception e1) {}
 								return new ConnectionResult(e.getLocalizedMessage(),null);
 							}
 						} else {
@@ -178,6 +203,9 @@ public class MainActivity extends AppCompatActivity
 								r.ConstructConnection(strings[8],strings[5],strings[6],strings[7]);
 							} catch (IllegalAccessException | InstantiationException | SQLException | ClassNotFoundException e) {
 								e.printStackTrace();
+								try {
+									r.dellocalbound(Integer.parseInt(strings[4]));
+								} catch (Exception e1) {}
 								return new ConnectionResult(e.getLocalizedMessage(),null);
 							}
 						}
@@ -200,13 +228,13 @@ public class MainActivity extends AppCompatActivity
 					}
 				}.execute(String.valueOf(((CheckBox) dialogView.findViewById(R.id.dialog_create_use_ssh)).isChecked()),
 						editTextToString(R.id.dialog_create_ssh_address),editTextToString(R.id.dialog_create_ssh_username),
-						editTextToString(R.id.dialog_create_ssh_password),String.valueOf(4321+connHandlers.size()),editTextToString(R.id.dialog_create_schema),
+						editTextToString(R.id.dialog_create_ssh_password),String.valueOf(3333+connHandlers.size()),editTextToString(R.id.dialog_create_schema),
 						editTextToString(R.id.dialog_create_username),editTextToString(R.id.dialog_create_password),
 						editTextToString(R.id.dialog_create_address));
 				//ServerAddress, Username, Password, LocalPort, Schema, SQLUsername, SQLPassword, SQLServerAddress
 				AlertDialog.Builder builder=new AlertDialog.Builder(findViewById(R.id.app_bar).getContext());
 				builder.setCancelable(false);
-				builder.setTitle("Connecting...");
+				builder.setTitle(R.string.dialog_connecting);
 				ProgressBar loadingAnimation=new ProgressBar(findViewById(R.id.app_bar).getContext());
 				loadingAnimation.setPadding(0,getPixels(20),0,0);
 				builder.setView(loadingAnimation);
@@ -234,12 +262,8 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	public void gitHubClick(View v) {
-		Snackbar.make(findViewById(R.id.app_bar),"GitHub unavailable",1000).show();
-		/*new AsyncTask<Void,Void,Void>() {
-			public Void doInBackground(Void... params) {
-				return null;
-			}
-		}.execute();*/
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/RCD-Y/rMySQL-Android"));
+		startActivity(browserIntent);
 	}
 
 	public int getPixels(int dp) {

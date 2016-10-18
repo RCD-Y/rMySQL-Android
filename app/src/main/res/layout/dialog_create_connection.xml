@@ -2,13 +2,8 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
+	style="@style/OperationDialog"
 	android:id="@+id/dialog_create_connection"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingTop="@dimen/activity_vertical_margin"
-	android:paddingLeft="@dimen/activity_horizontal_margin"
-	android:paddingRight="@dimen/activity_horizontal_margin"
-	android:orientation="vertical"
 	tools:context="richard.rmysql.MainActivity"
 	tools:showIn="@layout/app_bar_main">
 	<android.support.design.widget.TextInputLayout

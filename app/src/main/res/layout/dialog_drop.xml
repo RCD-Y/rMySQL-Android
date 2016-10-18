@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  style="@style/OperationDialog"
+			  android:id="@+id/dialog_drop"
+			  tools:ignore="NestedWeights"
+			  tools:context="richard.rmysql.MainActivity">
+	<TextView
+		style="@style/DialogText"
+		android:text="@string/dialog_drop_drop_table"/>
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		<EditText
+			android:layout_weight="1.0"
+			style="@style/DialogText"
+			android:layout_width="0dp"
+			android:id="@+id/dialog_drop_table_name"
+			android:hint="@string/dialog_drop_table_name"/>
+		<Button
+			style="@style/ChoiceButton"
+			android:id="@+id/dialog_drop_choice_table"/>
+	</LinearLayout>
+</LinearLayout>

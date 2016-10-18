@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
+	style="@style/OperationDialog"
 	android:id="@+id/dialog_update"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingTop="@dimen/activity_vertical_margin"
-	android:paddingLeft="@dimen/activity_horizontal_margin"
-	android:paddingRight="@dimen/activity_horizontal_margin"
-	android:orientation="vertical"
 	tools:ignore="NestedWeights"
 	tools:context="richard.rmysql.MainActivity">
 	<TextView
@@ -19,6 +14,7 @@
 		android:layout_height="wrap_content">
 		<EditText
 			android:layout_weight="1.0"
+			android:layout_width="0dp"
 			style="@style/DialogText"
 			android:id="@+id/dialog_update_table_name"
 			android:hint="@string/dialog_update_table_name"/>
@@ -41,6 +37,7 @@
 			<EditText
 				style="@style/DialogText"
 				android:layout_weight="1.0"
+				android:layout_width="0dp"
 				android:id="@+id/dialog_update_flag_field"
 				android:hint="@string/dialog_update_flag_field"/>
 			<Button
@@ -62,6 +59,7 @@
 			<EditText
 				style="@style/DialogText"
 				android:layout_weight="1.0"
+				android:layout_width="0dp"
 				android:id="@+id/dialog_update_flag_value"
 				android:hint="@string/dialog_update_flag_value"/>
 		</LinearLayout>
@@ -78,6 +76,7 @@
 			<EditText
 				style="@style/DialogText"
 				android:layout_weight="1.0"
+				android:layout_width="0dp"
 				android:id="@+id/dialog_update_dest_field"
 				android:hint="@string/dialog_update_dest_field"/>
 			<Button
@@ -99,6 +98,7 @@
 			<EditText
 				style="@style/DialogText"
 				android:layout_weight="1.0"
+				android:layout_width="0dp"
 				android:id="@+id/dialog_update_dest_value"
 				android:hint="@string/dialog_update_dest_value"/>
 		</LinearLayout>

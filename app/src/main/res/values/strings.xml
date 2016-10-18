@@ -56,7 +56,7 @@
 	<string name="connection_operation_fail_message">Error Message</string>
 	<string name="connection_operation_nothing">Nothing found</string>
 	<string name="connection_operation_successful">Operation Successful</string>
-	<string name="connection_operation_success_message">Rerun the last SELECT statement to show updated results?</string>
+	<string name="connection_operation_success_message">Rerun the last SELECT statement to show updated results? Nothing will happen if there\'s no such statement.</string>
 	<string name="connection_operation_success_option_yes">Yes</string>
 	<string name="connection_operation_success_option_no">No</string>
 
@@ -65,10 +65,10 @@
 	<string name="dialog_select_table_name">Table Name</string>
 	<string name="dialog_select_where">Where</string>
 	<string name="dialog_select_flag_field">Flag Field</string>
-	<string name="dialog_select_equals">=</string>
+	<string name="dialog_select_equals" translatable="false">=</string>
 	<string name="dialog_select_flag_value">Flag Value</string>
 	<string name="dialog_select_custom_condition">Custom Condition</string>
-	<string name="dialog_select_custom_example">Condition (e.g. Name=`Bob`)</string>
+	<string name="dialog_select_custom_example">Condition (e.g. Name="Bob")</string>
 	<string name="dialog_select_execute">Select</string>
 
 	<string name="dialog_update_title">Update</string>
@@ -76,17 +76,76 @@
 	<string name="dialog_update_table_name">Table Name</string>
 	<string name="dialog_update_where">Where</string>
 	<string name="dialog_update_flag_field">Flag Field</string>
-	<string name="dialog_update_equals">=</string>
+	<string name="dialog_update_equals" translatable="false">=</string>
 	<string name="dialog_update_flag_value">Flag Value</string>
 	<string name="dialog_update_set">Set</string>
 	<string name="dialog_update_dest_field">Destination Field</string>
 	<string name="dialog_update_dest_value">Destination Value</string>
 	<string name="dialog_update_custom">Custom</string>
-	<string name="dialog_update_custom_condition_example">Condition (e.g. Name=`Bob`)</string>
+	<string name="dialog_update_custom_condition_example">Condition (e.g. Name="Bob")</string>
 	<string name="dialog_update_custom_statement_example">Statement (e.g. Age=26)</string>
 	<string name="dialog_update_execute">Update</string>
+
+	<string name="dialog_data_update">Update</string>
+	<string name="dialog_data_delete">Delete</string>
+
+	<string name="dialog_insert_title">Insert</string>
+	<string name="dialog_insert_insert_into">Insert Into</string>
+	<string name="dialog_insert_table_name">Table Name</string>
+	<string name="dialog_insert_for_fields">For Fields</string>
+	<string name="dialog_insert_fields_example">Fields (e.g. Name, Gender)</string>
+	<string name="dialog_insert_with_values">With Values</string>
+	<string name="dialog_insert_values_example">Values (e.g. "Bob", "Male")</string>
+	<string name="dialog_insert_execute">Insert</string>
+
+	<string name="dialog_delete_title">Delete</string>
+	<string name="dialog_delete_del_from">Delete From</string>
+	<string name="dialog_delete_table_name">Table Name</string>
+	<string name="dialog_delete_where">Where</string>
+	<string name="dialog_delete_flag_field">Flag Field</string>
+	<string name="dialog_delete_equals" translatable="false">=</string>
+	<string name="dialog_delete_flag_value">Flag Value</string>
+	<string name="dialog_delete_custom_condition">Custom Condition</string>
+	<string name="dialog_delete_custom_example">Condition (e.g. Name="Bob")</string>
+	<string name="dialog_delete_execute">Delete</string>
+
+	<string name="dialog_drop_title">Drop</string>
+	<string name="dialog_drop_drop_table">Drop Table</string>
+	<string name="dialog_drop_table_name">Table Name</string>
+	<string name="dialog_drop_execute">Drop</string>
+
+	<string name="dialog_create_table_title">Create</string>
+	<string name="dialog_create_table_create">Create Table</string>
+	<string name="dialog_create_table_table_name">Table Name</string>
+	<string name="dialog_create_table_initial_field">Initial Field</string>
+	<string name="dialog_create_table_field">Field</string>
+	<string name="dialog_create_table_of_type">Of Type</string>
+	<string name="dialog_create_table_type">Type (e.g. VARCHAR)</string>
+	<string name="dialog_create_table_with_length">With Length</string>
+	<string name="dialog_create_table_length">Length</string>
+	<string name="dialog_create_table_execute">Create</string>
+
+	<string name="dialog_alter_title">Alter</string>
+	<string name="dialog_alter_alter">Alter Table</string>
+	<string name="dialog_alter_table_name">Table Name</string>
+	<string name="dialog_alter_load">Load</string>
+	<string name="dialog_alter_field_list">Field List</string>
+	<string name="dialog_alter_empty_message">Load a table first.</string>
+	<string name="dialog_alter_execute">Done</string>
+	<string name="dialog_alter_successful">Alter operation completed successfully. You may want to load again to get the newest information.</string>
+	<string name="dialog_alter_field_title_change">Change Field Specs</string>
+	<string name="dialog_alter_field_title_add">Add Field</string>
+	<string name="dialog_alter_field_name">Field Name</string>
+	<string name="dialog_alter_field_type">Type(Length)</string>
+	<string name="dialog_alter_field_extra">Extra (e.g. DEFAULT NULL)</string>
+	<string name="dialog_alter_field_execute_change">Alter</string>
+	<string name="dialog_alter_field_execute_add">Add</string>
+	<string name="dialog_alter_field_edit">Edit</string>
+	<string name="dialog_alter_field_remove">Remove</string>
+	<string name="dialog_alter_add">Add</string>
 
 	<string name="dialog_please_wait">Please Wait&#8230;</string>
 	<string name="dialog_suggest_failed">Nothing to suggest</string>
 	<string name="dialog_stop">Stop</string>
+	<string name="dialog_connecting">Connecting&#8230;</string>
 </resources>

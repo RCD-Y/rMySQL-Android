@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:id="@+id/dialog_create_table"
+			  style="@style/OperationDialog"
+			  tools:ignore="NestedWeights"
+			  tools:context="richard.rmysql.MainActivity">
+	<TextView
+		style="@style/DialogText"
+		android:text="@string/dialog_create_table_create"/>
+	<EditText
+		style="@style/DialogText"
+		android:id="@+id/dialog_create_table_table_name"
+		android:hint="@string/dialog_create_table_table_name"/>
+	<TextView
+		style="@style/DialogText"
+		android:text="@string/dialog_create_table_initial_field"/>
+	<EditText
+		style="@style/DialogText"
+		android:id="@+id/dialog_create_table_field"
+		android:hint="@string/dialog_create_table_field"/>
+	<TextView
+		style="@style/DialogText"
+		android:text="@string/dialog_create_table_of_type"/>
+	<EditText
+		style="@style/DialogText"
+		android:id="@+id/dialog_create_table_type"
+		android:hint="@string/dialog_create_table_type"/>
+	<TextView
+		style="@style/DialogText"
+		android:text="@string/dialog_create_table_with_length"/>
+	<EditText
+		style="@style/DialogText"
+		android:inputType="number"
+		android:id="@+id/dialog_create_table_length"
+		android:hint="@string/dialog_create_table_length"/>
+</LinearLayout>
